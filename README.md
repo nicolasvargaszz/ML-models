@@ -1,5 +1,5 @@
 # ML-models
-models that we used to analize the data we hace
+models that we used to analize the data we have
 
 # What kind of Data we have?
 
