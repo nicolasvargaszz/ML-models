@@ -1,0 +1,1 @@
+A GitHub organization is a shared workspace where teams of people can collaborate on multiple projects. It allows for centralized management of repositories, teams, and permissions within a group. 
