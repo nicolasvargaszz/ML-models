@@ -1,95 +1,101 @@
-# ML-models
-models that we used to analize the data we have
+Here is the README content formatted in Markdown, with code blocks shown inline without using triple backticks:
 
-# What kind of Data we have?
+---
 
-We have two importan .csv files and they contain computer complaints, and the other one normal complaints (All this complains are in spanish)
+# 💻 Machine Learning Models for Complaint Classification
+![Python](https://img.shields.io/badge/Python-3.8-blue) ![Scikit-learn](https://img.shields.io/badge/Scikit--learn-0.24-blue) ![TF-IDF](https://img.shields.io/badge/TF--IDF-Algorithm-orange)
 
+This repository focuses on applying **machine learning models** to classify complaint types using natural language processing (NLP) techniques. We aim to predict whether a complaint is related to computer issues or non-computer issues using various ML models.
 
-# Whats our goal with that data.
+## 📂 What Kind of Data Do We Have?
+We are working with two important `.csv` files that contain:
+1. **Computer complaints**
+2. **Non-computer complaints**
 
-So we want to train a ML model with our data, and we're going to develop a model that predic the clasification of our complain.
-We just hace two option: computer-complain and no-computer-complain.
- 
-![denuncias](https://github.com/nicolasvargaszz/ML-models/assets/65906810/1748a023-1a53-4fce-88d6-2a0f05dbaef0)
-That's the size of our data.
+> All complaints are in **Spanish**, which adds an interesting dimension to the text processing and classification.
 
-as you can see, we don't have a massive cuantity of data.
+![Dataset Overview](https://github.com/nicolasvargaszz/ML-models/assets/65906810/1748a023-1a53-4fce-88d6-2a0f05dbaef0)
 
-# How will we use our that.
+As shown above, we are dealing with a moderately sized dataset. 
 
-It's well know that the ML models only understand numbers, and not str.
-Since we have our complains in str we need to change that, and for doing that, we're going to use the TF-idf algorithm.
+## 🎯 Goal of the Project
+Our goal is to build a **machine learning model** that can accurately classify complaints into two categories:
+- **Computer-related complaints**
+- **Non-computer-related complaints**
 
-## What's the TF-idf algorithm 
-Certainly! TF-IDF stands for Term Frequency-Inverse Document Frequency. It is a popular algorithm used in information retrieval and text mining to measure the importance of a term in a document within a collection of documents.
-fun fact: google use this algorith in the search bar.
-Term Frequency (TF) is a measure of how frequently a term appears in a document. It is calculated by dividing the number of times a term appears in a document by the total number of terms in the document. The idea behind TF is that the more times a term appears in a document, the more important it is to that document.
+## 🛠️ How Will We Use the Data?
+Since machine learning models only work with numerical data, we need to transform our text data (complaints in Spanish) into a numerical format. To achieve this, we will use the **TF-IDF (Term Frequency-Inverse Document Frequency)** algorithm.
 
-Inverse Document Frequency (IDF) is a measure of how important a term is across the entire collection of documents. It is calculated by taking the logarithm of the ratio of the total number of documents to the number of documents that contain the term. The IDF value decreases as the term appears in more documents, thus giving higher weight to terms that are rare and unique.
+## 🔎 What's the TF-IDF Algorithm?
+TF-IDF is a popular algorithm in NLP used to convert text into a format that can be processed by machine learning models. It assigns weights to words based on their importance in a document and across a collection of documents.
 
-The TF-IDF score for a term in a document is obtained by multiplying the TF value with the IDF value. The higher the TF-IDF score, the more relevant the term is to the document.
+- **Term Frequency (TF)**: Measures how frequently a term appears in a document.
+- **Inverse Document Frequency (IDF)**: Measures how important a term is across the entire collection.
 
-In scikit-learn, you can use the TfidfVectorizer
+In **Scikit-learn**, this transformation is done using `TfidfVectorizer`.
 
-by now you should know that we can't apply all this calculus to letter, so thats why we use the TfidfVectorizer, to convert or complains in a matrix.
+`from sklearn.feature_extraction.text import TfidfVectorizer`
 
-# Defining the Labels and features for the TF-idf algorithm 
+`legal_tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, norm='l2', ngram_range=(1, 2), stop_words=list(STOP_WORDS))`
 
-legal_tfidf = TfidfVectorizer(sublinear_tf=True, min_df=5, norm='l2', ngram_range=(1, 2), stop_words=list(STOP_WORDS))
-legal_tfidf.fit(df[df['tipo'] == 'denuncia-Legal']['Denuncias'])
-legal_vocab = legal_tfidf.vocabulary_
+`legal_tfidf.fit(df[df['tipo'] == 'denuncia-Legal']['Denuncias'])`
 
-here we use the TfidfVectorizer for out vocabulary and then we'll define our labels and feature
+`legal_vocab = legal_tfidf.vocabulary_`
 
-legal_features = TfidfVectorizer(sublinear_tf=True, min_df=5, norm='l2', ngram_range=(1, 2), stop_words=list(STOP_WORDS), vocabulary=legal_vocab).fit_transform(df[df['tipo'] == 'denuncia-Legal']['Denuncias'])
-legal_labels = labels[df['tipo'] == 'denuncia-Legal']
+This snippet transforms the complaint texts into numerical vectors and builds a vocabulary from the legal complaint data.
 
-And with a lit more we will have the most importan words: 
-![image](https://github.com/nicolasvargaszz/ML-models/assets/65906810/104b7019-d11f-46ae-8e87-5648ea3c86c4)
+## 📑 Defining the Labels and Features
+After applying TF-IDF, we define the features and labels:
 
+`legal_features = TfidfVectorizer(sublinear_tf=True, min_df=5, norm='l2', ngram_range=(1, 2), stop_words=list(STOP_WORDS), vocabulary=legal_vocab).fit_transform(df[df['tipo'] == 'denuncia-Legal']['Denuncias'])`
 
-Now come the most important part of the project:
+`legal_labels = labels[df['tipo'] == 'denuncia-Legal']`
 
-# Choosing the model we'll use.
+The `legal_features` are extracted using the defined vocabulary, and `legal_labels` contain the corresponding labels for the complaints.
 
-RandomForestClassifier:
+![Most Important Words](https://github.com/nicolasvargaszz/ML-models/assets/65906810/104b7019-d11f-46ae-8e87-5648ea3c86c4)
 
-# The RandomForestClassifier 
-is an ensemble learning method based on decision trees. It creates multiple decision trees and combines their predictions to make the final classification.
-The "n_estimators" parameter specifies the number of decision trees to be created in the random forest. A higher number can potentially improve the model's performance but may also increase training time.
-The "max_depth" parameter limits the depth of each decision tree in the random forest. It helps control overfitting by restricting the complexity of the trees.
-The "random_state" parameter is used to set a seed value for random number generation, ensuring reproducibility of results.
-LinearSVC:
+## 🤖 Choosing the Model
+We experiment with several machine learning models to find the best one for our classification task:
 
-# LinearSVC
-(Linear Support Vector Classifier) is a linear model for classification. It applies the principles of Support Vector Machines (SVM) to solve binary and multi-class classification problems.
-Unlike traditional SVM, LinearSVC uses a linear kernel by default and scales well to large datasets.
-It seeks to find the best hyperplane that separates different classes, maximizing the margin between them.
-LinearSVC supports the use of regularization techniques, such as L1 or L2 regularization, to control model complexity and prevent overfitting.
-MultinomialNB:
+### RandomForestClassifier
 
-# MultinomialNB
-(Multinomial Naive Bayes) is a probabilistic classification algorithm based on Bayes' theorem with the assumption of feature independence.
-It is commonly used for text classification tasks, such as document categorization or spam filtering.
-MultinomialNB models the likelihood of each feature's occurrence given the class and estimates the class probabilities using Bayes' theorem.
-It works well with discrete features and is suitable for problems with multiple classes.
-LogisticRegression:
+The `RandomForestClassifier` is an ensemble learning method based on decision trees. It creates multiple decision trees and combines their predictions to make the final classification.
 
-# LogisticRegression
-is a linear model for binary and multi-class classification.
-Despite its name, LogisticRegression is primarily used for classification tasks rather than regression.
-It estimates the probability of belonging to a certain class using a logistic function (sigmoid function).
-The "random_state" parameter sets a seed value for random number generation, ensuring consistent results.
-These models are commonly used in machine learning for classification tasks, and each has its own strengths and weaknesses. It's important to experiment and tune the model parameters based on your specific dataset and problem to achieve optimal performance.
+- **`n_estimators`**: Number of decision trees.
+- **`max_depth`**: Limits the depth of each tree.
+- **`random_state`**: Seed for reproducibility.
 
-![image](https://github.com/nicolasvargaszz/ML-models/assets/65906810/8a3b087e-acdf-4e64-b6f3-ef9d9a1fdede)
+### LinearSVC
 
-applying our data to that model we get that the best model for us is the linearSVC, but how can we be sure about it.
-well people say that numbers don't lie, but let's check.
+`LinearSVC` (Linear Support Vector Classifier) is a linear model for classification:
 
-![image](https://github.com/nicolasvargaszz/ML-models/assets/65906810/d1507b7c-1f6b-46d5-91eb-00cd4b5c3b55)
+- Uses a linear kernel by default.
+- Finds the best hyperplane that separates different classes.
+- Supports regularization to prevent overfitting.
 
-So there's an excel file in this repo where we can see the same input and diferents outputs from the diferent models, at the end the only one with 100% of efectivity was the linearSVC.
-So ones again, we can tell that numbers don't lie.
+### MultinomialNB
 
+`MultinomialNB` (Multinomial Naive Bayes) is based on Bayes' theorem:
+
+- Suitable for text classification tasks.
+- Models the likelihood of each feature's occurrence given the class.
+
+### LogisticRegression
+
+`LogisticRegression` is a linear model for binary and multi-class classification:
+
+- Estimates the probability of belonging to a certain class using a logistic function.
+- Supports regularization to control model complexity.
+
+![Model Comparison](https://github.com/nicolasvargaszz/ML-models/assets/65906810/8a3b087e-acdf-4e64-b6f3-ef9d9a1fdede)
+
+Applying our data to these models, we find that the `LinearSVC` performs the best.
+
+![Model Performance](https://github.com/nicolasvargaszz/ML-models/assets/65906810/d1507b7c-1f6b-46d5-91eb-00cd4b5c3b55)
+
+So, the `LinearSVC` model achieves 100% effectiveness, confirming its superior performance for our dataset.
+
+---
+
+Feel free to adjust any sections or add more details as needed!
