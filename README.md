@@ -1,4 +1,4 @@
-Here is the README content formatted in Markdown, with code blocks shown inline without using triple backticks:
+
 
 ---
 
@@ -98,4 +98,4 @@ So, the `LinearSVC` model achieves 100% effectiveness, confirming its superior p
 
 ---
 
-Feel free to adjust any sections or add more details as needed!
+
